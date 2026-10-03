@@ -1,0 +1,23 @@
+@startuml
+start
+:Saisir l'identifiant étudiant et du livre;
+:Rechercher l'étudiant et le livre;
+if (Étudiant et livre trouvés ?) then (oui)
+  if (Moins de 3 emprunts en cours ?) then (oui)
+    if (Exemplaire disponible ?) then (oui)
+      :Décrémenter les exemplaires disponibles;
+      :Créer un emprunt avec retour prévu à J+14;
+      :Associer l'emprunt à l'étudiant;
+      :Enregistrer l'emprunt dans la bibliothèque;
+      :Afficher la confirmation;
+    else (non)
+      :Afficher LivreIndisponibleException;
+    endif
+  else (non)
+    :Afficher LimiteEmpruntDepasseeException;
+  endif
+else (non)
+  :Afficher l'exception d'identifiant introuvable;
+endif
+stop
+@enduml

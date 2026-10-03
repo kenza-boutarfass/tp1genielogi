@@ -1,0 +1,29 @@
+@startuml
+actor Bibliothécaire
+participant "Application console" as App
+participant Bibliotheque
+participant Etudiant
+participant Livre
+participant Emprunt
+Bibliothécaire -> App : saisir id étudiant et id livre
+App -> Bibliotheque : emprunterLivre(idEtudiant, idLivre)
+Bibliotheque -> Bibliotheque : trouverEtudiantParId(idEtudiant)
+Bibliotheque -> Bibliotheque : trouverLivreParId(idLivre)
+Bibliotheque -> Etudiant : getEmpruntsEnCours()
+alt limite de 3 atteinte
+  Bibliotheque --> App : LimiteEmpruntDepasseeException
+else limite respectée
+  Bibliotheque -> Livre : emprunter()
+  alt aucun exemplaire disponible
+    Livre --> App : LivreIndisponibleException
+  else exemplaire disponible
+    Livre -> Livre : décrémenter le stock
+    create Emprunt
+    Bibliotheque -> Emprunt : créer avec date et retour prévu (+14 jours)
+    Bibliotheque -> Etudiant : ajouterEmprunt(emprunt)
+    Bibliotheque -> Bibliotheque : enregistrer l'emprunt
+    Bibliotheque --> App : emprunt créé
+  end
+end
+App --> Bibliothécaire : afficher résultat
+@enduml

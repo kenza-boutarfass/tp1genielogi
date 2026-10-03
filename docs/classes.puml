@@ -1,0 +1,56 @@
+@startuml
+skinparam classAttributeIconSize 0
+class Bibliotheque {
+  - livres: List<Livre>
+  - etudiants: List<Etudiant>
+  - emprunts: List<Emprunt>
+  - compteurIdEmprunt: int
+  + ajouterLivre(livre: Livre): void
+  + modifierLivre(livre: Livre): void
+  + supprimerLivre(id: int): void
+  + rechercherLivre(terme: String): List<Livre>
+  + emprunterLivre(idEtudiant: int, idLivre: int): Emprunt
+  + retournerLivre(idEmprunt: int): void
+}
+class Livre {
+  - id: int
+  - titre: String
+  - auteur: String
+  - categorie: String
+  - nombreExemplaires: int
+  + ajouterExemplaire(): void
+  + emprunter(): void
+  + retourner(): void
+  + estDisponible(): boolean
+}
+class Etudiant {
+  - id: int
+  - nom: String
+  - prenom: String
+  - email: String
+  - emprunts: List<Emprunt>
+  + consulterInformations(): String
+  + consulterEmprunts(): List<Emprunt>
+  + getEmpruntsEnCours(): List<Emprunt>
+}
+class Emprunt {
+  - id: int
+  - dateEmprunt: LocalDate
+  - dateRetourPrevue: LocalDate
+  - dateRetourEffective: LocalDate
+  - statut: StatutEmprunt
+  + terminer(): void
+  + estEnRetard(): boolean
+}
+enum StatutEmprunt {
+  EN_COURS
+  RETOURNE
+  EN_RETARD
+}
+Bibliotheque o-- "0..*" Livre
+Bibliotheque o-- "0..*" Etudiant
+Bibliotheque o-- "0..*" Emprunt
+Etudiant "1" -- "0..*" Emprunt : effectue
+Livre "1" -- "0..*" Emprunt : concerne
+Emprunt --> StatutEmprunt
+@enduml
